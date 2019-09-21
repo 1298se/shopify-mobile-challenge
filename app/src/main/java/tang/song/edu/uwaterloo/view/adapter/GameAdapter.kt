@@ -11,36 +11,77 @@ import com.squareup.picasso.Picasso
 import tang.song.edu.uwaterloo.R
 import tang.song.edu.uwaterloo.retrofit.models.ProductResponse
 
-class GameAdapter(val items: List<ProductResponse>, val context: Context) : BaseAdapter() {
+class GameAdapter(
+    items: List<ProductResponse>,
+    selectedItems: List<ProductResponse>,
+    selectedPositions: List<Int>
+) :
+    BaseAdapter() {
+    var mMatchedItems = selectedItems
+    var mItems = items
+    var mCurrentPositions = selectedPositions
 
     override fun getItem(position: Int): Any {
-        return items[position]
+        return mItems[position]
     }
 
     override fun getItemId(position: Int): Long {
-        return items[position].id.toLong()
+        return mItems[position].id.toLong()
     }
 
     override fun getCount(): Int {
-        return items.size
+        return mItems.size
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val cardView: CardView
-        if (convertView == null) {
+        var cardView = convertView
+        val viewHolder: ViewHolder?
+
+        if (cardView == null) {
             val layoutInflater =
                 parent?.context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            cardView = layoutInflater.inflate(R.layout.card_product_image, parent, false) as CardView
+            cardView =
+                layoutInflater.inflate(R.layout.card_product_image, parent, false) as CardView
+            viewHolder = ViewHolder(cardView)
+            cardView.tag = viewHolder
+        } else {
+            cardView.forceLayout()
+            viewHolder = cardView.tag as ViewHolder
+        }
+        val currentItem = mItems[position]
 
-            val imageView = cardView.findViewById<ImageView>(R.id.product_image)
+        if (mMatchedItems.contains(currentItem) || mCurrentPositions.contains(position)) {
             Picasso.get()
-                .load(items[position].image.src)
+                .load(currentItem.image.src)
                 .centerCrop()
                 .fit()
-                .into(imageView)
+                .into(viewHolder.mImageView)
         } else {
-            cardView = convertView as CardView
+            Picasso.get()
+                .load(android.R.color.transparent)
+                .centerCrop()
+                .fit()
+                .into(viewHolder.mImageView)
         }
         return cardView
+    }
+
+    fun setProducts(items: List<ProductResponse>) {
+        mItems = items
+        notifyDataSetChanged()
+    }
+
+    fun setMatchedProducts(items: List<ProductResponse>) {
+        mMatchedItems = items
+        notifyDataSetChanged()
+    }
+
+    fun setSelectedPositions(positions: List<Int>) {
+        mCurrentPositions = positions
+        notifyDataSetChanged()
+    }
+
+    private class ViewHolder(cardView: CardView) {
+        val mImageView: ImageView = cardView.findViewById(R.id.product_image)
     }
 }

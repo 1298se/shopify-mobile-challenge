@@ -11,7 +11,7 @@
             android:id="@+id/shuffleButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Shuffle"
+            android:text="@string/game_shuffle"
             android:layout_gravity="center_horizontal" />
 
     <TextView
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
-            android:text="Score:"
+            android:text="@string/game_score"
             android:textSize="24sp" />
 
     <TextView
@@ -28,7 +28,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="0"
             android:textSize="24sp" />
 
     <GridView
@@ -38,8 +37,7 @@
             android:layout_height="match_parent"
             android:horizontalSpacing="4dp"
             android:verticalSpacing="4dp"
-            android:numColumns="auto_fit"
-            android:stretchMode="columnWidth"
-            android:columnWidth="50dp"/>
+            android:numColumns="10"
+            android:stretchMode="columnWidth" />
 
 </LinearLayout>
