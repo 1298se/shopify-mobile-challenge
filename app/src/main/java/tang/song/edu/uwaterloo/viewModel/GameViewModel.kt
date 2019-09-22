@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.os.Handler
-import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,7 +20,6 @@ class GameViewModel : ViewModel() {
     private var requiredMatches = 0
 
     fun getData(): LiveData<GameViewModelData> {
-        Log.d("CUR-TICKET", "getData()")
         if (data?.value?.productsData == null) {
             data = MutableLiveData()
             fetchApiData()
@@ -103,16 +101,14 @@ class GameViewModel : ViewModel() {
         data?.postValue(dataInstance)
     }
 
-    fun fetchApiData() {
+    private fun fetchApiData() {
         val call = RetrofitService.createService().getProducts()
-        Log.d("CUR-TICKET", "api call")
         call.enqueue(object : Callback<ShopifyProductsResponse> {
             override fun onResponse(
                 call: Call<ShopifyProductsResponse>,
                 response: Response<ShopifyProductsResponse>
             ) {
                 if (response.isSuccessful) {
-                    Log.d("CUR-TICKET", "call is successful")
                     val baseProducts =
                         response.body()?.products?.shuffled()?.take(10) as MutableList<ProductResponse>
                     repeat(requiredMatches) {
@@ -136,7 +132,7 @@ class GameViewModel : ViewModel() {
         requiredMatches = num
     }
 
-    fun areAllEqual(list: MutableList<Int>): Boolean {
+    private fun areAllEqual(list: MutableList<Int>): Boolean {
         val mappedProducts = list.map { pos ->
             products[pos]
         }

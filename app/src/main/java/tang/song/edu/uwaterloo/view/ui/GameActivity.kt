@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AlertDialog
-import android.util.Log
 import android.widget.AdapterView
 import android.widget.ImageView
 import com.squareup.picasso.Picasso
@@ -17,7 +16,7 @@ import tang.song.edu.uwaterloo.view.adapter.GameAdapter
 import tang.song.edu.uwaterloo.viewModel.GameViewModel
 
 class GameActivity : AppCompatActivity() {
-    var gameViewModel: GameViewModel? = null
+    private var gameViewModel: GameViewModel? = null
     var shouldAllowSelection = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +31,6 @@ class GameActivity : AppCompatActivity() {
         gameViewModel?.setRequiredMatches(requiredMatches)
         gameViewModel?.getData()?.observe(this, Observer { response ->
             if (response != null) {
-                Log.d("CUR-TICKET", "getDataCallback")
                 shouldAllowSelection = response.shouldAllowSelection
 
                 scoreTextView.text = response.matchedProductsData.size.toString()
@@ -51,6 +49,7 @@ class GameActivity : AppCompatActivity() {
                         .setPositiveButton(R.string.main_menu) { _, _ ->
                             finish()
                         }
+                        .show()
                 }
             }
         })
@@ -69,7 +68,6 @@ class GameActivity : AppCompatActivity() {
             }
         }
         shuffleButton.setOnClickListener {
-            Log.d("TAG", "TAGGED")
             gameViewModel?.shuffle()
         }
     }

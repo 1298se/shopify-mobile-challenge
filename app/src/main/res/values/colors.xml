@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#41AAA8</color>
+    <color name="colorPrimaryDark">#45969b</color>
+    <color name="colorAccent">#a64942</color>
+    <color name="colorGameBackGround">#E5E5E5</color>
+    <color name="cardBackground">#ffebd3</color>
 </resources>

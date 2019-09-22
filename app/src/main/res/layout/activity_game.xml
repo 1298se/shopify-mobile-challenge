@@ -32,12 +32,13 @@
 
     <GridView
             android:id="@+id/gameGridView"
-            android:layout_marginTop="16dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:background="@color/colorGameBackGround"
             android:horizontalSpacing="4dp"
             android:verticalSpacing="4dp"
-            android:numColumns="10"
+            android:numColumns="5"
             android:stretchMode="columnWidth" />
 
 </LinearLayout>
