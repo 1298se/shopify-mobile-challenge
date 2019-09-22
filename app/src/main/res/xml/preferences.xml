@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Game">
+        <ListPreference
+                android:key="game_required_matches"
+                android:defaultValue="2"
+                android:entries="@array/pref_required_matches_entries"
+                android:entryValues="@array/pref_required_matches_values"
+                android:title="Required Matches"
+                android:summary="%s" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="About">
+        <Preference
+                android:key="game_version"
+                android:summary="dev"
+                android:title="Version" />
+    </PreferenceCategory>
+</android.support.v7.preference.PreferenceScreen>

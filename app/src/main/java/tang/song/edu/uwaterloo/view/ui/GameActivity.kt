@@ -4,6 +4,8 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
+import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.widget.AdapterView
 import android.widget.ImageView
@@ -26,6 +28,8 @@ class GameActivity : AppCompatActivity() {
         gameGridView.adapter = gameAdapter
 
         gameViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(GameViewModel::class.java)
+        val requiredMatches = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("game_required_matches","2") ?: "2")
+        gameViewModel?.setRequiredMatches(requiredMatches)
         gameViewModel?.getData()?.observe(this, Observer { response ->
             if (response != null) {
                 Log.d("CUR-TICKET", "getDataCallback")
@@ -36,6 +40,18 @@ class GameActivity : AppCompatActivity() {
                 gameAdapter.setProducts(response.productsData)
                 gameAdapter.setMatchedProducts(response.matchedProductsData)
                 gameAdapter.setSelectedPositions(response.selectedPositions)
+
+                if (response.isAllMatched) {
+                    AlertDialog.Builder(this)
+                        .setTitle(R.string.game_complete)
+                        .setMessage(R.string.game_complete_message)
+                        .setNegativeButton(R.string.game_dismiss) { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .setPositiveButton(R.string.main_menu) { _, _ ->
+                            finish()
+                        }
+                }
             }
         })
 

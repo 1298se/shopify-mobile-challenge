@@ -1,6 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Memory Matcher</string>
     <string name="game_score">Score:</string>
     <string name="app_start">Start</string>
     <string name="game_shuffle">Shuffle</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="app_home">Home</string>
+    <string name="app_settings">Settings</string>
+    <string name="game_required_matches">Choose Required Matches</string>
+    <string name="game_complete">Game Complete</string>
+    <string name="game_complete_message">You have completed all matches!</string>
+    <string name="game_dismiss">Dismiss</string>
+    <string name="main_menu">Main Menu</string>
+
 </resources>

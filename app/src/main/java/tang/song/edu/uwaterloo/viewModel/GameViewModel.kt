@@ -11,13 +11,14 @@ import retrofit2.Response
 import tang.song.edu.uwaterloo.retrofit.RetrofitService
 import tang.song.edu.uwaterloo.retrofit.models.ProductResponse
 import tang.song.edu.uwaterloo.retrofit.models.ShopifyProductsResponse
-import java.util.*
 
 class GameViewModel : ViewModel() {
     var data: MutableLiveData<GameViewModelData>? = null
     var matchedProducts: MutableList<ProductResponse> = mutableListOf()
     var products: MutableList<ProductResponse> = mutableListOf()
     var selectedPositions: MutableList<Int> = mutableListOf()
+    var isAllMatched = false
+    private var requiredMatches = 0
 
     fun getData(): LiveData<GameViewModelData> {
         Log.d("CUR-TICKET", "getData()")
@@ -32,17 +33,21 @@ class GameViewModel : ViewModel() {
         if (!matchedProducts.contains(products[pos])) {
             var shouldAllowSelection = true
             when {
-                selectedPositions.size < 1 -> {
+                selectedPositions.contains(pos) -> {
+                    selectedPositions.remove(pos)
+                }
+                selectedPositions.size < requiredMatches - 1 -> {
                     selectedPositions.add(pos)
                 }
-                selectedPositions.size == 1 -> {
+                selectedPositions.size == requiredMatches - 1 -> {
                     when {
-                        selectedPositions[0] == pos -> {
-                            selectedPositions.remove(pos)
-                        }
-                        products[selectedPositions[0]] == products[pos] -> {
+                        areAllEqual(selectedPositions) && (products[pos] == products[selectedPositions[0]]) -> {
                             matchedProducts.add(products[pos])
                             selectedPositions = mutableListOf()
+
+                            if (matchedProducts.size == products.size / requiredMatches) {
+                                isAllMatched = true
+                            }
                         }
                         else -> {
                             selectedPositions.add(pos)
@@ -64,36 +69,34 @@ class GameViewModel : ViewModel() {
                 products,
                 matchedProducts,
                 selectedPositions,
-                shouldAllowSelection
+                shouldAllowSelection,
+                isAllMatched
             )
             data?.postValue(dataInstance)
         }
     }
 
     fun shuffle() {
-        val matchedPositions = mutableListOf<Int>()
-        matchedProducts.forEach { matchedProduct ->
-            for ((index, value) in products.withIndex()) {
-                if (matchedProduct == value) {
-                    matchedPositions.add(index)
-                }
+        val unfixedPositions = mutableListOf<Int>()
+        val unfixedValues = mutableListOf<ProductResponse>()
+
+        for ((index, value) in products.withIndex()) {
+            if (!matchedProducts.contains(value)) {
+                unfixedPositions.add(index)
+                unfixedValues.add(value)
             }
         }
 
-        products.shuffle()
+        unfixedPositions.shuffle()
 
-        val shuffledMatchedPositions = mutableListOf<Int>()
-        matchedProducts.forEach { matchedProduct ->
-            for ((index, value) in products.withIndex()) {
-                if (matchedProduct == value) {
-                    shuffledMatchedPositions.add(index)
-                }
+         products = products.mapIndexed { index, product ->
+            if (matchedProducts.contains(product)) {
+                product
+            } else {
+                unfixedValues[unfixedPositions.indexOf(index)]
             }
-        }
+        } as MutableList
 
-        for ((index, value) in matchedPositions.withIndex()) {
-            Collections.swap(products, value, shuffledMatchedPositions[index])
-        }
         val dataInstance = data?.value?.copy()
         dataInstance?.productsData = products
 
@@ -110,11 +113,14 @@ class GameViewModel : ViewModel() {
             ) {
                 if (response.isSuccessful) {
                     Log.d("CUR-TICKET", "call is successful")
-                    products = response.body()?.products as MutableList<ProductResponse>
-                    products.addAll(products)
+                    val baseProducts =
+                        response.body()?.products?.shuffled()?.take(10) as MutableList<ProductResponse>
+                    repeat(requiredMatches) {
+                        products.addAll(baseProducts)
+                    }
                     products.shuffle()
                     val dataInstance =
-                        GameViewModelData(products, matchedProducts, selectedPositions, true)
+                        GameViewModelData(products, matchedProducts, selectedPositions, true, isAllMatched)
 
                     data?.postValue(dataInstance)
                 }
@@ -124,5 +130,23 @@ class GameViewModel : ViewModel() {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
         })
+    }
+
+    fun setRequiredMatches(num: Int) {
+        requiredMatches = num
+    }
+
+    fun areAllEqual(list: MutableList<Int>): Boolean {
+        val mappedProducts = list.map { pos ->
+            products[pos]
+        }
+        val firstProduct = mappedProducts[0]
+        for (product in mappedProducts) {
+            if (product != firstProduct) {
+                return false
+            }
+        }
+
+        return true
     }
 }

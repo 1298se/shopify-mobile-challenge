@@ -6,5 +6,6 @@ data class GameViewModelData(
     var productsData: List<ProductResponse>,
     var matchedProductsData: List<ProductResponse>,
     var selectedPositions: List<Int>,
-    var shouldAllowSelection: Boolean
+    var shouldAllowSelection: Boolean,
+    var isAllMatched: Boolean
 )
