@@ -8,6 +8,7 @@ import android.preference.PreferenceManager
 import android.support.v7.app.AlertDialog
 import android.widget.AdapterView
 import android.widget.ImageView
+import android.widget.Toast
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_game.*
 import tang.song.edu.uwaterloo.R
@@ -29,6 +30,13 @@ class GameActivity : AppCompatActivity() {
         gameViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(GameViewModel::class.java)
         val requiredMatches = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("game_required_matches","2") ?: "2")
         gameViewModel?.setRequiredMatches(requiredMatches)
+
+        gameViewModel?.getError()?.observe(this, Observer { error ->
+            if (error != null) {
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+            }
+        })
+
         gameViewModel?.getData()?.observe(this, Observer { response ->
             if (response != null) {
                 shouldAllowSelection = response.shouldAllowSelection

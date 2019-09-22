@@ -17,6 +17,8 @@ class GameViewModel : ViewModel() {
     var products: MutableList<ProductResponse> = mutableListOf()
     var selectedPositions: MutableList<Int> = mutableListOf()
     var isAllMatched = false
+
+    var errorString: MutableLiveData<String>? = null
     private var requiredMatches = 0
 
     fun getData(): LiveData<GameViewModelData> {
@@ -25,6 +27,13 @@ class GameViewModel : ViewModel() {
             fetchApiData()
         }
         return data as LiveData<GameViewModelData>
+    }
+
+    fun getError(): LiveData<String> {
+        if (errorString == null) {
+            errorString = MutableLiveData()
+        }
+        return errorString as LiveData<String>
     }
 
     fun setSelected(pos: Int) {
@@ -87,7 +96,7 @@ class GameViewModel : ViewModel() {
 
         unfixedPositions.shuffle()
 
-         products = products.mapIndexed { index, product ->
+        products = products.mapIndexed { index, product ->
             if (matchedProducts.contains(product)) {
                 product
             } else {
@@ -108,22 +117,30 @@ class GameViewModel : ViewModel() {
                 call: Call<ShopifyProductsResponse>,
                 response: Response<ShopifyProductsResponse>
             ) {
-                if (response.isSuccessful) {
-                    val baseProducts =
-                        response.body()?.products?.shuffled()?.take(10) as MutableList<ProductResponse>
-                    repeat(requiredMatches) {
-                        products.addAll(baseProducts)
-                    }
-                    products.shuffle()
-                    val dataInstance =
-                        GameViewModelData(products, matchedProducts, selectedPositions, true, isAllMatched)
-
-                    data?.postValue(dataInstance)
+                if (!response.isSuccessful) {
+                    errorString?.postValue("An unexpected error occurred: " + response.message())
+                    return
                 }
+                val baseProducts =
+                    response.body()?.products?.shuffled()?.take(10) as MutableList<ProductResponse>
+                repeat(requiredMatches) {
+                    products.addAll(baseProducts)
+                }
+                products.shuffle()
+                val dataInstance =
+                    GameViewModelData(
+                        products,
+                        matchedProducts,
+                        selectedPositions,
+                        true,
+                        isAllMatched
+                    )
+
+                data?.postValue(dataInstance)
             }
 
             override fun onFailure(call: Call<ShopifyProductsResponse>, t: Throwable) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                errorString?.postValue("An unexpected error occurred: " + t.message)
             }
         })
     }
