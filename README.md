@@ -10,8 +10,8 @@ This project was implemented using an MVVM app architecture for compatability wi
 Third party libraries: Retrofit, Picasso.
 
 # Photos
-![alt text](https://github.com/1298se/shopify-mobile-challenge/blob/master/attachments/Screenshot_20190921-234235_Memory%20Matcher.jpg)
-![alt_text](https://github.com/1298se/shopify-mobile-challenge/blob/master/attachments/Screenshot_20190921-234241_Memory%20Matcher.jpg)
-![alt_text](https://github.com/1298se/shopify-mobile-challenge/blob/master/attachments/Screenshot_20190921-234321_Memory%20Matcher.jpg)
-![alt_text](https://github.com/1298se/shopify-mobile-challenge/blob/master/attachments/Screenshot_20190921-235038_Memory%20Matcher.jpg)
-![alt_text](https://github.com/1298se/shopify-mobile-challenge/blob/master/attachments/Screenshot_20190921-235104_Memory%20Matcher.jpg)
+<img src="https://github.com/1298se/shopify-mobile-challenge/blob/master/attachments/Screenshot_20190921-234235_Memory%20Matcher.jpg" alt="drawing" height="500" width="250"/>
+<img src="https://github.com/1298se/shopify-mobile-challenge/blob/master/attachments/Screenshot_20190921-234241_Memory%20Matcher.jpg" alt="drawing" height="500" width="250"/>
+<img src="https://github.com/1298se/shopify-mobile-challenge/blob/master/attachments/Screenshot_20190921-234321_Memory%20Matcher.jpg" alt="drawing" height="500" width="250"/>
+<img src="https://github.com/1298se/shopify-mobile-challenge/blob/master/attachments/Screenshot_20190921-235038_Memory%20Matcher.jpg" alt="drawing" height="500" width="250"/>
+<img src="https://github.com/1298se/shopify-mobile-challenge/blob/master/attachments/Screenshot_20190921-235104_Memory%20Matcher.jpg" alt="drawing" height="500" width="250"/>
